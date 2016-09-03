@@ -1,0 +1,52 @@
+.bar .button {
+    font-size: 20px;
+}
+
+.card-header {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.highlight {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.center-image{
+      display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+.small-icon{
+    width:30px;
+    float: left;
+}
+
+.pf-value-item{
+   line-height:35px;
+}
+
+.pf-structure-item{
+    width: 140px;
+    margin:0 auto;
+    line-height:35px;
+}
+
+#wallet-detail-icon{
+    width:50px;
+    float:left;
+    margin-right:20px;
+    margin-bottom:20px;
+}
+
+.currency-symbol{
+    float:left;
+    font-size: 60px;
+    margin-right: 10px;
+}
+
+.currency-symbol-small{
+    float:left;
+    font-size: 20px;
+}

@@ -1,0 +1,26 @@
+<ion-view view-title="">
+    <ion-nav-title>
+        <img src="img/icon.png" style="float:left; margin-top: 5px;"><span style="margin:0 auto;">Addresses</span>
+    </ion-nav-title>
+    <ion-nav-buttons side="secondary">
+      <button class="button ion-refresh" ng-click="refresh()"></button>
+    </ion-nav-buttons>
+    <ion-content class="padding">
+        <div class="button-bar">
+          <a class="button button-positive icon-left ion-ios-plus-outline" ng-click="openAddForm()">Add</a>
+          <a class="button button-assertive icon-left ion-ios-minus-outline" ng-click="toggleDelete()">Delete</a>
+        </div>
+        <ion-list show-delete="shouldShowDelete">
+            <ion-item class="item-divider text-center">
+                Tap on an address for details.
+            </ion-item>
+            <ion-item ng-repeat="wallet in wallets track by $index" href="#/tab/wallets/{{wallet.address}}">
+                <div class="currency-symbol"><i class="cc-{{wallet.type.toUpperCase()}}"></i></div>
+                <p>{{wallet.label}}</p>
+                <p>{{wallet.address}}</p>
+                <p>{{wallet.balance}}</p>
+                <ion-delete-button class="ion-minus-circled" ng-click="deleteWallet(wallet.address)"></ion-delete-button>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

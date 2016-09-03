@@ -1,0 +1,44 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Add Wallet</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeAddForm()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div class="padding">
+        <p>All fields required.</p></div>
+    <form name="addWallet" ng-submit="submitAddForm()" novalidate>
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Label</span>
+          <input type="text" name="label" ng-model="newWalletData.label" required>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Address</span>
+          <input type="text" name="address" ng-model="newWalletData.address" ng-minlength="25" ng-maxlength="42" required>
+        </label>
+        <label class="item item-input item-select">
+          <span class="input-label">Type</span>
+            <select name="type" ng-model="newWalletData.type" required>
+                <option value="btc">Bitcoin</option>
+                <option value="doge">Dogecoin</option>
+                <option value="ltc">Litecoin</option>
+                <option value="eth">Ethereum</option>
+                <option value="xrp">Ripple</option>
+                <option value="xcp">Counterparty</option>
+                <option value="rdd">Reddcoin</option>
+                <option value="dash">Dash</option>
+                <option value="ppc">Peercoin</option>
+            </select>
+        </label>
+    </div>
+        <div class="padding">
+          <p ng-show="(addWallet.address.$error.minlength ||addWallet.address.$error.maxlength) && !addWallet.address.$pristine">* Invalid address. Must be between 25 and 35 characters.</p>
+        </div>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit" ng-disabled="addWallet.$invalid">Add</button>
+        </label>
+    </form>
+  </ion-content>
+</ion-modal-view> 

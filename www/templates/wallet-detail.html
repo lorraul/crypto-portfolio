@@ -1,0 +1,33 @@
+<ion-view view-title="">
+    <ion-nav-title>
+        <img src="img/icon.png" style="float:left; margin-top: 5px;"><span style="margin:0 auto;">Address Details</span>
+    </ion-nav-title>
+    <ion-nav-buttons side="secondary">
+      <button class="button ion-refresh" ng-click="refresh()"></button>
+    </ion-nav-buttons>
+  <ion-content class="padding">
+      <div class="row">
+          <div class="col">
+              <div class="currency-symbol"><i class="cc-{{wallet.type.toUpperCase()}}"></i></div>
+              <p><b>{{wallet.label}}</b></p>
+              <p>{{wallet.address}}</p>
+          </div>
+      </div>
+      
+      <div class="row">
+          <div class="col">Balance: {{wallet.balance}}</div>
+      </div>
+      
+      <div class="row">
+          <div class="col">Current price of {{wallet.type.toUpperCase()}}: {{wallet.price}} USD</div>
+      </div>
+      
+      <div class="row">
+          <div class="col">Wallet Value: {{wallet.value}} USD</div>
+      </div>
+      
+      <div class="row">
+          <div class="col"><img ng-src="https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl={{wallet.address}}" class="center-image"></div>
+      </div>
+  </ion-content>
+</ion-view>

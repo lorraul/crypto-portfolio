@@ -1,0 +1,18 @@
+<ion-view view-title="">
+    <ion-nav-title>
+        <img src="img/icon.png" style="float:left; margin-top: 5px;"><span style="margin:0 auto;">Currencies</span>
+    </ion-nav-title>
+    <ion-nav-buttons side="secondary">
+      <button class="button ion-refresh" ng-click="refresh()"></button>
+    </ion-nav-buttons>
+    <ion-content class="padding">
+        <ion-list show-delete="shouldShowDelete">
+            <ion-item ng-repeat="currency in currencies track by $index">
+                <div class="currency-symbol"><i class="cc-{{currency.type.toUpperCase()}}"></i></div>
+                <p>{{currency.type.toUpperCase()}}/USD: ${{currency.priceusd.toFixed(8)}}</p>
+                <p>{{currency.type.toUpperCase()}}/BTC: ${{currency.pricebtc.toFixed(8)}}</p>
+                <p>Your balance: {{currency.balanceString}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
