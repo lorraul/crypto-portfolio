@@ -1,0 +1,9 @@
+/* crypto-fonts extension*/
+.cc-RDD:before {
+    content: "-Ɍ-";
+}
+.cc-RDD-alt:before {
+    content: "-Ɍ-";
+}
+
+.cc-RDD, .cc-RDD-alt { color: #E95359; }
