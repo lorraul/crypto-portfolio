@@ -7,7 +7,8 @@
     </ion-nav-buttons>
     <ion-content class="padding">
         <div class="button-bar">
-          <a class="button button-positive icon-left ion-ios-plus-outline" ng-click="openAddForm()">Add</a>
+          <a class="button button-positive icon-left ion-ios-plus-outline" ng-click="openAddForm()">Address</a>
+          <a class="button button-balanced icon-left ion-ios-plus-outline" ng-click="openFixedForm()">Fixed</a>
           <a class="button button-assertive icon-left ion-ios-minus-outline" ng-click="toggleDelete()">Delete</a>
         </div>
         <ion-list show-delete="shouldShowDelete">
@@ -20,6 +21,16 @@
                 <p>{{wallet.address}}</p>
                 <p>{{wallet.balance}}</p>
                 <ion-delete-button class="ion-minus-circled" ng-click="deleteWallet(wallet.address)"></ion-delete-button>
+            </ion-item>
+            <ion-item ng-if="fixed.length!=0" class="item-divider text-center">
+                Fixed value items
+            </ion-item>
+            <ion-item ng-repeat="fixedItem in fixed track by $index">
+                <div class="currency-symbol"><i class="cc-FIX"></i></div>
+                <p>{{fixedItem.label}}</p>
+                <p>Fixed value item</p>
+                <p>{{fixedItem.value}}</p>
+                <ion-delete-button class="ion-minus-circled" ng-click="deleteFixed(fixedItem.label)"></ion-delete-button>
             </ion-item>
         </ion-list>
     </ion-content>

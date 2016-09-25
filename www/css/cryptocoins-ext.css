@@ -7,3 +7,13 @@
 }
 
 .cc-RDD, .cc-RDD-alt { color: #E95359; }
+
+
+.cc-FIX:before {
+    content: "🅵";
+}
+.cc-FIX-alt:before {
+    content: "🅵";
+}
+
+.cc-FIX, .cc-FIX-alt { margin-right:10px; color: #009900; }

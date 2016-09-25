@@ -37,7 +37,7 @@ angular.module('crypto.controllers', ['chart.js'])
 .controller('StatsCtrl', function($scope) {
 })
 
-.controller('WalletsCtrl', function($scope, $rootScope, $injector, $ionicModal, $ionicPopup, Wallets, walletsWBalances, $cordovaToast, $localStorage) {
+.controller('WalletsCtrl', function($scope, $rootScope, $injector, $ionicModal, $ionicPopup, Wallets, Fixed, walletsWBalances, $cordovaToast, $localStorage) {
     if (typeof window.analytics !== 'undefined') {
         analytics.trackView("Addresses");
     }
@@ -51,11 +51,14 @@ angular.module('crypto.controllers', ['chart.js'])
     }
     
     $scope.wallets = walletsWBalances;  
-    
+    $scope.fixed = Fixed.getFixed();  
+
     $scope.shouldShowDelete = false;
     $scope.toggleDelete = function () {
                 $scope.shouldShowDelete = !$scope.shouldShowDelete;
             }
+    
+    //add new address
     $ionicModal.fromTemplateUrl('templates/addwallet.html', { scope: $scope }).then(function(modal) {
         $scope.modal = modal;
     });
@@ -86,7 +89,7 @@ angular.module('crypto.controllers', ['chart.js'])
                 }
                 else {
                     if(window.cordova){
-                        $cordovaToast.show('Adding wallet...', 'long', 'center');
+                        $cordovaToast.show('Adding address...', 'long', 'center');
                     } else {
                         if(console){ console.log('cordova is not running'); }
                     }
@@ -104,10 +107,16 @@ angular.module('crypto.controllers', ['chart.js'])
                         $scope.newWalletData.balance = data.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' ' + $scope.newWalletData.type.toUpperCase();
                         $scope.wallets.push($scope.newWalletData);
                     }
+                    else if (add == 'duplicate') {
+                        $ionicPopup.alert({
+                                      title: 'Address cannot be added!',
+                                      template: 'Already in portfolio: ' + $scope.newWalletData.address
+                                     });   
+                    }
                     else {
                         $ionicPopup.alert({
                                       title: 'Address cannot be added!',
-                                      template: $scope.newWalletData.address
+                                      template: 'Unknown error: ' + $scope.newWalletData.address
                                      });
                     }
                 }
@@ -116,6 +125,62 @@ angular.module('crypto.controllers', ['chart.js'])
         $scope.closeAddForm();
     };
     
+        //add new fixed item
+    $ionicModal.fromTemplateUrl('templates/addfixed.html', { scope: $scope }).then(function(modal) {
+        $scope.modalFixed = modal;
+    });
+    
+    $scope.closeFixedForm = function() {
+        $scope.modalFixed.hide();
+    };
+    
+    $scope.openFixedForm = function() {
+        $scope.newFixedData = {};
+        $scope.modalFixed.show();
+    };
+    
+    $scope.submitFixedForm = function() {
+        if(window.cordova){
+            $cordovaToast.show('Adding new fixed item...', 'long', 'center');
+        } else {
+            if(console){ console.log('cordova is not running'); }
+        }
+        
+        //add new fixed item to local storage
+        var add = Fixed.addToFixed($scope.newFixedData);
+        
+        //add new fixed item to current view if it is added to local storage
+        if (add == true) {
+            if (typeof window.analytics !== 'undefined') {
+                analytics.trackEvent('Address', 'Add', 'fixed');
+            }
+            
+            var newFixedValue = $scope.newFixedData.value.toString();
+            if ( (parseFloat(newFixedValue) % 1)==0 ) newFixedValue = newFixedValue + '.00';
+            newFixedValue = newFixedValue.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' USD';
+            
+            $scope.fixed.push({
+                label: $scope.newFixedData.label,
+                value: newFixedValue
+            });
+        }
+        else if (add == 'duplicate') {
+            $ionicPopup.alert({
+                          title: 'Fixed item cannot be added!',
+                          template: 'Label duplicate: ' + $scope.newFixedData.label
+                         });   
+        }
+        else {
+            $ionicPopup.alert({
+                          title: 'Fixed item cannot be added!',
+                          template: 'Unknown error: ' + $scope.newFixedData.label
+                         });
+        }
+
+        $scope.closeFixedForm();
+    };
+    
+    //delete address
     $scope.deleteWallet = function (address) {
         var confirmPopup = $ionicPopup.confirm({
             title: 'Confirm Delete',
@@ -134,6 +199,37 @@ angular.module('crypto.controllers', ['chart.js'])
                 
                 //delete from local storage
                 Wallets.deleteFromWallets(address);
+                
+                if (typeof window.analytics !== 'undefined') {
+                    analytics.trackEvent('Address', 'Delete');
+                }
+                
+            } else {
+                console.log('Canceled delete');
+            }
+        });
+        $scope.shouldShowDelete = false;
+     };
+    
+    //delete fixed item
+    $scope.deleteFixed = function (label) {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Confirm Delete',
+            template: 'Are you sure you want to delete this fixed item?'
+        });
+
+        confirmPopup.then(function (res) {
+            if (res) {
+                
+                //delete from scope to update the view
+                for (var i = 0; i < $scope.fixed.length; i++) {
+                    if ($scope.fixed[i].label == label) {
+                        $scope.fixed.splice(i, 1);
+                    }
+                }
+                
+                //delete from local storage
+                Fixed.deleteFromFixed(label);
                 
                 if (typeof window.analytics !== 'undefined') {
                     analytics.trackEvent('Address', 'Delete');

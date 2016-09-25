@@ -24,6 +24,51 @@ angular.module('crypto.services', ['ngResource'])
     }
 }])
 
+.factory('Fixed', function($localStorage) {
+    var returnFunctions = {};
+    var fixedItems = $localStorage.getObject('fixed','[]'); 
+    
+    returnFunctions.addToFixed = function (fixeddata) {
+        for (var i = 0; i < fixedItems.length; i++) {
+            if (fixedItems[i].label == fixeddata.label){
+                return 'duplicate';
+            }
+        }
+        fixedItems.push(fixeddata);
+        $localStorage.storeObject('fixed', fixedItems);
+        return true;
+    };
+    
+    returnFunctions.deleteFromFixed = function (label) {
+        for (var i = 0; i < fixedItems.length; i++) {
+            if (fixedItems[i].label == label) {
+                fixedItems.splice(i, 1);
+                $localStorage.storeObject('fixed', fixedItems);
+                return true;
+            }
+        }
+        return false;
+    };
+    
+    returnFunctions.getFixed = function (fixeddata) {
+        fixedItems = $localStorage.getObject('fixed','[]'); //reread fixed items for subsequent services
+        var fixedValueString, returnArray = [];
+        for (var i in fixedItems){
+            fixedValueString = fixedItems[i].value.toString();
+            if ( (parseFloat(fixedValueString) % 1)==0 ) fixedValueString = fixedValueString + '.00';
+            fixedValueString = fixedValueString.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' USD';
+            returnArray.push({
+                label: fixedItems[i].label,
+                value: fixedValueString,
+                valueFloat: parseFloat(fixedItems[i].value),
+            })
+        }
+        return returnArray;
+    }
+    
+    return returnFunctions;
+})
+
 .factory('Wallets', function($localStorage) {
     var returnFunctions = {};
     var wallets = $localStorage.getObject('wallets','[]'); 
@@ -31,7 +76,7 @@ angular.module('crypto.services', ['ngResource'])
     returnFunctions.addToWallets = function (walletdata) {
         for (var i = 0; i < wallets.length; i++) {
             if (wallets[i].address == walletdata.address){
-                return 'Wallet already in your portfolio.';
+                return 'duplicate';
             }
         }
         wallets.push(walletdata);
@@ -44,8 +89,10 @@ angular.module('crypto.services', ['ngResource'])
             if (wallets[i].address == address) {
                 wallets.splice(i, 1);
                 $localStorage.storeObject('wallets', wallets);
+                return true;
             }
         }
+        return false;
     };
     
     returnFunctions.getWallets = function () {
@@ -157,6 +204,9 @@ angular.module('crypto.services', ['ngResource'])
         var currencies = [];
         var currencyFound;
         var apiErrors = [];
+        
+        //adding btc by default for fixed items'
+        currencies.push('btc');
         
         for (i in wallets) {
             currencyFound = false;
@@ -411,30 +461,60 @@ angular.module('crypto.services', ['ngResource'])
     }
 }])
 
-.factory('portfolioData', ['currenciesBalancePrice', function (currenciesBalancePrice) {
+.factory('fixedTotalValue', ['Fixed', 'currenciesWithPrices', function (Fixed, currenciesWithPrices) {    
     return function(){
-        return currenciesBalancePrice()
-        .then(function(currencies){
+        return currenciesWithPrices.single('btc').then(
+            function(btcPrice){
+                var fixed = Fixed.getFixed();  
+                var fixedTotalValue={usd: 0, btc: 0};
+                for(var i in fixed){
+                    fixedTotalValue.usd += fixed[i].valueFloat;
+                    fixedTotalValue.btc += fixed[i].valueFloat/btcPrice.priceusd;
+                }
+                return fixedTotalValue;
+            },
+            function(error){
+                console.log('Error: fixedTotalValue')
+                return 'error';
+            }
+        );
+    }
+}])
 
-            var returnObject = {};
-            
-            var portfolioValue = {btc: 0, usd: 0};
-            for (currency in currencies){
-                portfolioValue.btc += currencies[currency].balance * currencies[currency].pricebtc;
-                portfolioValue.usd += currencies[currency].balance * currencies[currency].priceusd;
-            }
-            
-            var portfolioStructure = [];
-            for (currency in currencies){
-                var percent;
-                if (portfolioValue.usd == 0) percent = 0; 
-                else percent = (currencies[currency].valueusd/portfolioValue.usd)*100;
-                portfolioStructure.push({type: currencies[currency].type, percent: percent, color: currencies[currency].color});
-            }
-            
-            returnObject.value = portfolioValue;
-            returnObject.structure = portfolioStructure;
-            return returnObject;
+.factory('portfolioData', ['currenciesBalancePrice', 'fixedTotalValue', function (currenciesBalancePrice, fixedTotalValue) {
+    return function(){
+        return currenciesBalancePrice().then(function(currencies){
+            return fixedTotalValue().then(function(fixed){
+                var returnObject = {};
+                
+                var portfolioValue = {btc: 0, usd: 0};
+                //add currency values to portfolio value
+                for (currency in currencies){
+                    portfolioValue.btc += currencies[currency].balance * currencies[currency].pricebtc;
+                    portfolioValue.usd += currencies[currency].balance * currencies[currency].priceusd;
+                }
+                //add fixed items value to portfolio value
+                portfolioValue.btc += fixed.btc;
+                portfolioValue.usd += fixed.usd;
+
+                var portfolioStructure = [];
+                //add currency type to portfolio structure
+                for (currency in currencies){
+                    var percent;
+                    if (portfolioValue.usd == 0) percent = 0; 
+                    else percent = (currencies[currency].valueusd/portfolioValue.usd)*100;
+                    portfolioStructure.push({type: currencies[currency].type, percent: percent, color: currencies[currency].color});
+                }
+                //add fixed items to portfolio structure
+                var fixedPercent = (fixed.usd/portfolioValue.usd)*100;
+                portfolioStructure.push({type: 'fix', percent: fixedPercent, color: '#009900'});
+
+                returnObject.value = portfolioValue;
+                returnObject.structure = portfolioStructure;
+
+                //{value, structure}
+                return returnObject;
+            });
         });
     }
 }])
