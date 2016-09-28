@@ -505,9 +505,12 @@ angular.module('crypto.services', ['ngResource'])
                     else percent = (currencies[currency].valueusd/portfolioValue.usd)*100;
                     portfolioStructure.push({type: currencies[currency].type, percent: percent, color: currencies[currency].color});
                 }
-                //add fixed items to portfolio structure
-                var fixedPercent = (fixed.usd/portfolioValue.usd)*100;
-                portfolioStructure.push({type: 'fix', percent: fixedPercent, color: '#009900'});
+                
+                //add fixed items to portfolio structure if fixedTotalValue!=0
+                if (fixed.usd != 0){
+                    var fixedPercent = (fixed.usd/portfolioValue.usd)*100;
+                    portfolioStructure.push({type: 'fix', percent: fixedPercent, color: '#009900'});
+                }
 
                 returnObject.value = portfolioValue;
                 returnObject.structure = portfolioStructure;

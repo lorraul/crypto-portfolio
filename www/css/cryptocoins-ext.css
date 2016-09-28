@@ -1,19 +1,19 @@
 /* crypto-fonts extension*/
 .cc-RDD:before {
-    content: "-Ɍ-";
+    content: "R";
 }
 .cc-RDD-alt:before {
-    content: "-Ɍ-";
+    content: "R";
 }
 
 .cc-RDD, .cc-RDD-alt { color: #E95359; }
 
 
 .cc-FIX:before {
-    content: "🅵";
+    content: "F";
 }
 .cc-FIX-alt:before {
-    content: "🅵";
+    content: "F";
 }
 
 .cc-FIX, .cc-FIX-alt { margin-right:10px; color: #009900; }

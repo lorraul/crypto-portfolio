@@ -42,11 +42,16 @@
 
 .currency-symbol{
     float:left;
-    font-size: 60px;
+    font-size: 50px;
     margin-right: 10px;
+    text-align: center;
+    width: 60px;
+    height: 60px;
 }
 
 .currency-symbol-small{
     float:left;
     font-size: 20px;
+    text-align: center;
+    width: 20px;
 }
