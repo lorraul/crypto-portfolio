@@ -1,1 +1,1 @@
-[Crypto Portfolio](https://play.google.com/store/apps/details?id=com.ionicframework.crypto569321) application source.
+[Crypto Portfolio](http://sigmagfx.com/crypto/) application source.
