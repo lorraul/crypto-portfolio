@@ -1,18 +1,9 @@
 angular.module('crypto.controllers', ['chart.js'])
 
-.controller('DashCtrl', function($scope, $stateParams, $ionicPlatform, portfolioData, $ionicPopup, admobSvc) {
+.controller('DashCtrl', function($scope, $stateParams, $ionicPlatform, portfolioData, $ionicPopup) {
     $ionicPlatform.ready(function() {
         if (typeof window.analytics !== 'undefined') {
             analytics.trackView("Dash");
-        }
-        
-        if (typeof admob.requestInterstitialAd !== 'undefined') { 
-            admob.requestInterstitialAd({
-                //publisherId: "ca-app-pub-3940256099942544/1033173712"   ->test id
-                publisherId: "ca-app-pub-9078612112781257/5603151265"
-            });
-        } else {
-            console.log("admob not running");
         }
     });
 

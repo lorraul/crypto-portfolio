@@ -1,6 +1,6 @@
-angular.module('cryptoapp', ['ionic', 'ngCordova', 'crypto.controllers', 'crypto.services', 'crypto.resources', 'admobModule'])
+angular.module('cryptoapp', ['ionic', 'ngCordova', 'crypto.controllers', 'crypto.services', 'crypto.resources'])
 
-.run(function($ionicPlatform, $rootScope, $ionicLoading, $ionicPopup, $localStorage, $state, $timeout, admobSvc) {
+.run(function($ionicPlatform, $rootScope, $ionicLoading, $ionicPopup, $localStorage, $state, $timeout) {
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
