@@ -1,14 +1,15 @@
 {
-  "name": "CryptoPortfolio",
-  "private": "true",
-  "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.2.4"
-  },
-  "dependencies": {
-    "ngCordova": "~0.1.24-alpha",
-    "angular-chart.js": "npm:angular-chart.js#0.8.8",
-    "Chart.js": "npm:chart.js#1.0.2",
-    "cryptocoins": "http://github.com/allienworks/cryptocoins.git#b3cc580d4cd7cbf075dc34857b2e2fa484b29c27",
-    "angular-resource": "^1.5.8"
-  }
+    "name": "CryptoPortfolio",
+    "private": "true",
+    "devDependencies": {
+        "ionic": "driftyco/ionic-bower#1.2.4"
+    },
+    "dependencies": {
+        "ngCordova": "~0.1.24-alpha",
+        "angular-chart.js": "npm:angular-chart.js#0.8.8",
+        "Chart.js": "npm:chart.js#1.0.2",
+        "cryptocoins": "http://github.com/allienworks/cryptocoins.git#b3cc580d4cd7cbf075dc34857b2e2fa484b29c27",
+        "angular-resource": "1.5.8",
+        "lodash": "^4.17.4"
+    }
 }
