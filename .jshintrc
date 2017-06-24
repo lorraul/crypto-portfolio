@@ -1,0 +1,15 @@
+{
+    "predef": [
+        "angular",
+        "console",
+        "document",
+        "window",
+        "_",
+        "cordova",
+        "analytics",
+        "StatusBar",
+        "navigator",
+        "Connection",
+        "ionic"
+    ]
+}

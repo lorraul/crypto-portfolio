@@ -1,27 +1,28 @@
 <ion-modal-view>
-  <ion-header-bar>
-    <h1 class="title">Add Fixed Item</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeFixedForm()">Close</button>
-    </div>
-  </ion-header-bar>
-  <ion-content>
-    <div class="padding">
-        <p>All fields required.</p></div>
-    <form name="addFixed" ng-submit="submitFixedForm()" novalidate>
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Label</span>
-          <input type="text" name="label" ng-model="newFixedData.label" required>
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Value (in USD)</span>
-          <input type="number" name="value" min="0" ng-model="newFixedData.value" required>
-        </label>
-    </div>
-        <label class="item">
-          <button class="button button-block button-positive" type="submit" ng-disabled="addFixed.$invalid">Add</button>
-        </label>
-    </form>
-  </ion-content>
-</ion-modal-view> 
+    <ion-header-bar>
+        <h1 class="title">Add Fixed Item</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeFixedForm()">Close</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="padding">
+            <p>All fields required.</p>
+        </div>
+        <form name="addFixed" ng-submit="submitFixedForm()" novalidate>
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Label</span>
+                    <input type="text" name="label" ng-model="newFixedData.label" required>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Value (in USD)</span>
+                    <input type="number" name="value" min="0" ng-model="newFixedData.value" required>
+                </label>
+            </div>
+            <label class="item">
+                <button class="button button-block button-positive" type="submit" ng-disabled="addFixed.$invalid">Add</button>
+            </label>
+        </form>
+    </ion-content>
+</ion-modal-view>
