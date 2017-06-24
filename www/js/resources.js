@@ -164,14 +164,11 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('walletDataxcp', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://xcp.blockscan.com/api2");
+        var apiRequest = $resource("https://counterpartychain.io/api/balances/:address");
         return {
             full: function (address) {
                 return apiRequest.get({
-                        module: 'address',
-                        action: 'balance',
-                        btc_address: address,
-                        asset: 'XCP'
+                        address: address
                     }).$promise
                     .then(
                         function (data) {
@@ -184,14 +181,16 @@ angular.module('crypto.resources', ['ngResource'])
             },
             balance: function (address) {
                 return apiRequest.get({
-                        module: 'address',
-                        action: 'balance',
-                        btc_address: address,
-                        asset: 'XCP'
+                        address: address
                     }).$promise
                     .then(
                         function (data) {
-                            return (((data || {}).data || {})[0] || {}).balance;
+                            data = _.find(data.data, {
+                                'asset': 'XCP'
+                            });
+                            if (_.has(data, 'amount')) {
+                                return data.amount;
+                            }
                         },
                         function (error) {
                             return 'error';
