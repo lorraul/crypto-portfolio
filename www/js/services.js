@@ -202,7 +202,7 @@ angular.module('crypto.services', ['ngResource'])
             var currencyFound;
             var apiErrors = [];
 
-            //adding btc by default for fixed items'
+            //adding btc by default for fixed items
             currencies.push('btc');
 
             for (var i in wallets) {
@@ -228,12 +228,14 @@ angular.module('crypto.services', ['ngResource'])
                                 apiErrors.push(currency);
                                 response.price = {
                                     usd: 0,
+                                    eur: 0,
                                     btc: 0
                                 };
                             }
                             return {
                                 type: currency,
                                 priceusd: parseFloat(response.price.usd),
+                                priceeur: parseFloat(response.price.eur),
                                 pricebtc: parseFloat(response.price.btc),
                                 time: new Date().toISOString(),
                                 color: response.color
@@ -252,12 +254,26 @@ angular.module('crypto.services', ['ngResource'])
                 return price;
             });
             $q.all(promises).then(function (results) {
+                addEurTypeToResults(results);
                 $localStorage.storeObject('prices', results);
                 deferred.resolve(results);
                 for (i in apiErrors) {
                     $ionicPopup.alert({
                         title: apiErrors[i].toUpperCase() + ' price API error!',
                         template: 'App will continue without ' + apiErrors[i].toUpperCase() + ' price. If error is persistent, check for updates.'
+                    });
+                }
+
+                //get eur/usd based on btc prices
+                function addEurTypeToResults(results) {
+                    var btcPrices = _.find(results, {
+                        type: 'btc'
+                    });
+                    results.push({
+                        type: 'eur',
+                        pricebtc: 1 / btcPrices.priceeur,
+                        priceeur: 1,
+                        priceusd: btcPrices.priceusd / btcPrices.priceeur
                     });
                 }
             });
@@ -444,6 +460,7 @@ angular.module('crypto.services', ['ngResource'])
                                             balance: currencies[i].balance,
                                             balanceString: currencies[i].balance.toString().replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' ' + currencies[i].type.toUpperCase(),
                                             priceusd: prices[j].priceusd,
+                                            priceeur: prices[j].priceeur,
                                             pricebtc: prices[j].pricebtc,
                                             valueusd: currencies[i].balance * prices[j].priceusd,
                                             valuebtc: currencies[i].balance * prices[j].pricebtc,
@@ -466,15 +483,23 @@ angular.module('crypto.services', ['ngResource'])
 
     .factory('fixedTotalValue', ['Fixed', 'currenciesWithPrices', function (Fixed, currenciesWithPrices) {
         return function () {
-            return currenciesWithPrices.single('btc').then(
-                function (btcPrice) {
+            return currenciesWithPrices.all().then(
+                function (prices) {
+                    var btcPrice = _.find(prices, {
+                        type: 'btc'
+                    });
+                    var eurPrice = _.find(prices, {
+                        type: 'eur'
+                    });
                     var fixed = Fixed.getFixed();
                     var fixedTotalValue = {
                         usd: 0,
+                        eur: 0,
                         btc: 0
                     };
                     for (var i in fixed) {
                         fixedTotalValue.usd += fixed[i].valueFloat;
+                        fixedTotalValue.eur += fixed[i].valueFloat / eurPrice.priceusd;
                         fixedTotalValue.btc += fixed[i].valueFloat / btcPrice.priceusd;
                     }
                     return fixedTotalValue;
@@ -495,15 +520,18 @@ angular.module('crypto.services', ['ngResource'])
 
                     var portfolioValue = {
                         btc: 0,
+                        eur: 0,
                         usd: 0
                     };
                     //add currency values to portfolio value
                     for (var currency in currencies) {
                         portfolioValue.btc += currencies[currency].balance * currencies[currency].pricebtc;
+                        portfolioValue.eur += currencies[currency].balance * currencies[currency].priceeur;
                         portfolioValue.usd += currencies[currency].balance * currencies[currency].priceusd;
                     }
                     //add fixed items value to portfolio value
                     portfolioValue.btc += fixed.btc;
+                    portfolioValue.eur += fixed.eur;
                     portfolioValue.usd += fixed.usd;
 
                     var portfolioStructure = [];

@@ -8,6 +8,7 @@ angular.module('crypto.controllers', ['chart.js'])
         });
 
         $scope.portfolioValueUsd = portfolioData.value.usd.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        $scope.portfolioValueEur = portfolioData.value.eur.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         $scope.portfolioValueBtc = portfolioData.value.btc.toFixed(8).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         $scope.portfolioStructure = portfolioData.structure;
 
