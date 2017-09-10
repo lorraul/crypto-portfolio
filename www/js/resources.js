@@ -67,7 +67,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('walletDataltc', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://ltc.blockr.io/api/v1/address/info/:address");
+        var apiRequest = $resource("https://chain.so/api/v2/get_address_balance/LTC/:address");
         return {
             full: function (address) {
                 return apiRequest.get({
@@ -88,7 +88,7 @@ angular.module('crypto.resources', ['ngResource'])
                     }).$promise
                     .then(
                         function (data) {
-                            return ((data || {}).data || {}).balance;
+                            return ((data || {}).data || {}).confirmed_balance;
                         },
                         function (error) {
                             return 'error';
@@ -201,7 +201,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('walletDatardd', ['$resource', function ($resource) {
-        var apiRequest = $resource("https://live.reddcoin.com/api/addr/:address/balance", {}, {
+        var apiRequest = $resource("http://live.reddcoin.com/api/addr/:address/balance", {}, {
             get: {
                 method: 'GET',
                 transformResponse: function (response) {
