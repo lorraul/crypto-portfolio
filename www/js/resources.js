@@ -315,6 +315,36 @@ angular.module('crypto.resources', ['ngResource'])
         };
     }])
 
+    .factory('currencyDataeur', ['$resource', function ($resource) {
+        var apiRequest = $resource("http://api.fixer.io/latest?symbols=EUR,USD");
+        var currencyColor = '#003399';
+        return {
+            full: function () {
+                return apiRequest.get().$promise.then(
+                    function (data) {
+                        return data;
+                    },
+                    function (error) {
+                        return error;
+                    }
+                );
+            },
+            usd: function () {
+                return apiRequest.get().$promise.then(
+                    function (data) {
+                        var returndata = {};
+                        returndata.price = data.rates.USD;
+                        returndata.color = currencyColor;
+                        return returndata;
+                    },
+                    function (error) {
+                        return 'error';
+                    }
+                );
+            }
+        };
+    }])
+
     .factory('currencyDatadoge', ['$resource', function ($resource) {
         var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/doge");
         var currencyColor = '#D9BD62';

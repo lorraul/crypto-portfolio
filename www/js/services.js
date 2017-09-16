@@ -253,27 +253,36 @@ angular.module('crypto.services', ['ngResource'])
                     );
                 return price;
             });
+
+            //add eur/usd to prices data
+            promises.push($injector.get('currencyDataeur').usd()
+                .then(function (response) {
+                        return {
+                            type: 'eur',
+                            priceusd: parseFloat(response.price),
+                            priceeur: 1,
+                            time: new Date().toISOString(),
+                            color: response.color
+                        };
+                    },
+                    function (error) {
+                        return {
+                            type: 'eur',
+                            priceusd: error,
+                            priceeur: 1,
+                            time: new Date().toISOString(),
+                            color: '#ff0000'
+                        };
+                    }
+                ));
+
             $q.all(promises).then(function (results) {
-                addEurTypeToResults(results);
                 $localStorage.storeObject('prices', results);
                 deferred.resolve(results);
                 for (i in apiErrors) {
                     $ionicPopup.alert({
                         title: apiErrors[i].toUpperCase() + ' price API error!',
                         template: 'App will continue without ' + apiErrors[i].toUpperCase() + ' price. If error is persistent, check for updates.'
-                    });
-                }
-
-                //get eur/usd based on btc prices
-                function addEurTypeToResults(results) {
-                    var btcPrices = _.find(results, {
-                        type: 'btc'
-                    });
-                    results.push({
-                        type: 'eur',
-                        pricebtc: 1 / btcPrices.priceeur,
-                        priceeur: 1,
-                        priceusd: btcPrices.priceusd / btcPrices.priceeur
                     });
                 }
             });
