@@ -164,7 +164,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('walletDataxcp', ['$resource', function ($resource) {
-        var apiRequest = $resource("https://counterpartychain.io/api/balances/:address");
+        var apiRequest = $resource("https://xchain.io/api/address/:address");
         return {
             full: function (address) {
                 return apiRequest.get({
@@ -185,12 +185,7 @@ angular.module('crypto.resources', ['ngResource'])
                     }).$promise
                     .then(
                         function (data) {
-                            data = _.find(data.data, {
-                                'asset': 'XCP'
-                            });
-                            if (_.has(data, 'amount')) {
-                                return data.amount;
-                            }
+                            return (data || {}).xcp_balance;
                         },
                         function (error) {
                             return 'error';
@@ -346,7 +341,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDatadoge', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/doge");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=DOGE&tsyms=BTC,USD,EUR");
         var currencyColor = '#D9BD62';
         return {
             full: function () {
@@ -356,7 +351,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     },
@@ -369,7 +364,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     },
@@ -382,7 +377,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDatabtc', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/btc");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=BTC,USD,EUR");
         var currencyColor = '#FF9900';
         return {
             full: function () {
@@ -392,7 +387,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -402,7 +397,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -412,7 +407,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDataltc', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/ltc");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=BTC,USD,EUR");
         var currencyColor = '#B3B3B3';
         return {
             full: function () {
@@ -422,7 +417,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -432,7 +427,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -442,7 +437,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDataeth', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/eth");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR");
         var currencyColor = '#616891';
         return {
             full: function () {
@@ -452,7 +447,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -462,7 +457,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -472,7 +467,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDataxrp', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/xrp");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=XRP&tsyms=BTC,USD,EUR");
         var currencyColor = '#346aa9';
         return {
             full: function () {
@@ -482,7 +477,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -492,7 +487,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -502,7 +497,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDataxcp', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/xcp");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=XCP&tsyms=BTC,USD,EUR");
         var currencyColor = '#ed1650';
         return {
             full: function () {
@@ -512,7 +507,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -522,7 +517,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -532,7 +527,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDatardd', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/rdd");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=RDD&tsyms=BTC,USD,EUR");
         var currencyColor = '#e95359';
         return {
             full: function () {
@@ -542,7 +537,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -552,7 +547,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -562,7 +557,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDatadash', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/dash");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=DASH&tsyms=BTC,USD,EUR");
         var currencyColor = '#346aa9';
         return {
             full: function () {
@@ -572,7 +567,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -582,7 +577,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -592,7 +587,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('currencyDatappc', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://coinmarketcap-nexuist.rhcloud.com/api/ppc");
+        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=PPC&tsyms=BTC,USD,EUR");
         var currencyColor = '#1f7b00';
         return {
             full: function () {
@@ -602,7 +597,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price;
+                        returndata.price = data;
                         returndata.color = currencyColor;
                         return returndata;
                     }
@@ -612,7 +607,7 @@ angular.module('crypto.resources', ['ngResource'])
                 return apiRequest.get().$promise.then(
                     function (data) {
                         var returndata = {};
-                        returndata.price = data.price.usd;
+                        returndata.price = data.usd;
                         returndata.color = currencyColor;
                         return returndata;
                     }

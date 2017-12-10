@@ -224,8 +224,9 @@ angular.module('crypto.services', ['ngResource'])
                 var currencyData = $injector.get('currencyData' + currency);
                 var price = currencyData.all()
                     .then(function (response) {
-                            if (response.price == 'error' || response.price === undefined || response.price == 'NaN') {
+                            if (response == 'error' || response.price == 'error' || response.price === undefined || response.price == 'NaN') {
                                 apiErrors.push(currency);
+                                response = {};
                                 response.price = {
                                     usd: 0,
                                     eur: 0,
@@ -234,18 +235,20 @@ angular.module('crypto.services', ['ngResource'])
                             }
                             return {
                                 type: currency,
-                                priceusd: parseFloat(response.price.usd),
-                                priceeur: parseFloat(response.price.eur),
-                                pricebtc: parseFloat(response.price.btc),
+                                priceusd: parseFloat(response.price.USD || 0),
+                                priceeur: parseFloat(response.price.EUR || 0),
+                                pricebtc: parseFloat(response.price.BTC || 0),
                                 time: new Date().toISOString(),
                                 color: response.color
                             };
                         },
                         function (error) {
+                            apiErrors.push(currency);
                             return {
                                 type: currency,
-                                priceusd: error,
-                                pricebtc: error,
+                                priceusd: 0,
+                                priceeur: 0,
+                                pricebtc: 0,
                                 time: new Date().toISOString(),
                                 color: '#ff0000'
                             };
@@ -268,7 +271,7 @@ angular.module('crypto.services', ['ngResource'])
                     function (error) {
                         return {
                             type: 'eur',
-                            priceusd: error,
+                            priceusd: 0,
                             priceeur: 1,
                             time: new Date().toISOString(),
                             color: '#ff0000'
@@ -538,6 +541,7 @@ angular.module('crypto.services', ['ngResource'])
                         portfolioValue.eur += currencies[currency].balance * currencies[currency].priceeur;
                         portfolioValue.usd += currencies[currency].balance * currencies[currency].priceusd;
                     }
+
                     //add fixed items value to portfolio value
                     portfolioValue.btc += fixed.btc;
                     portfolioValue.eur += fixed.eur;
