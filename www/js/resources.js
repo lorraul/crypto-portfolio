@@ -99,7 +99,7 @@ angular.module('crypto.resources', ['ngResource'])
     }])
 
     .factory('walletDataeth', ['$resource', function ($resource) {
-        var apiRequest = $resource("https://etherchain.org/api/account/:address");
+        var apiRequest = $resource("https://api.ethplorer.io/getAddressInfo/:address?apiKey=freekey");
         return {
             full: function (address) {
                 return apiRequest.get({
@@ -120,7 +120,7 @@ angular.module('crypto.resources', ['ngResource'])
                     }).$promise
                     .then(
                         function (data) {
-                            return (parseFloat(((data || {}).data[0] || {}).balance) / 1000000000000000000).toString();
+                            return (((data || {}).ETH || {}).balance).toString();
                         },
                         function (error) {
                             return 'error';
@@ -269,38 +269,6 @@ angular.module('crypto.resources', ['ngResource'])
                     .then(
                         function (data) {
                             return data.data;
-                        },
-                        function (error) {
-                            return 'error';
-                        }
-                    );
-            },
-        };
-    }])
-
-    .factory('walletDatappc', ['$resource', function ($resource) {
-        var apiRequest = $resource("http://ppc.blockr.io/api/v1/address/balance/:address");
-        return {
-            full: function (address) {
-                return apiRequest.get({
-                        address: address
-                    }).$promise
-                    .then(
-                        function (data) {
-                            return data.data;
-                        },
-                        function (error) {
-                            return 'error';
-                        }
-                    );
-            },
-            balance: function (address) {
-                return apiRequest.get({
-                        address: address
-                    }).$promise
-                    .then(
-                        function (data) {
-                            return ((data || {}).data || {}).balance;
                         },
                         function (error) {
                             return 'error';
@@ -559,36 +527,6 @@ angular.module('crypto.resources', ['ngResource'])
     .factory('currencyDatadash', ['$resource', function ($resource) {
         var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=DASH&tsyms=BTC,USD,EUR");
         var currencyColor = '#346aa9';
-        return {
-            full: function () {
-                return apiRequest.get();
-            },
-            all: function () {
-                return apiRequest.get().$promise.then(
-                    function (data) {
-                        var returndata = {};
-                        returndata.price = data;
-                        returndata.color = currencyColor;
-                        return returndata;
-                    }
-                );
-            },
-            usd: function () {
-                return apiRequest.get().$promise.then(
-                    function (data) {
-                        var returndata = {};
-                        returndata.price = data.usd;
-                        returndata.color = currencyColor;
-                        return returndata;
-                    }
-                );
-            }
-        };
-    }])
-
-    .factory('currencyDatappc', ['$resource', function ($resource) {
-        var apiRequest = $resource("https://min-api.cryptocompare.com/data/price?fsym=PPC&tsyms=BTC,USD,EUR");
-        var currencyColor = '#1f7b00';
         return {
             full: function () {
                 return apiRequest.get();
