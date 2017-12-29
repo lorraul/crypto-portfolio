@@ -131,7 +131,7 @@ angular.module('crypto.services', ['ngResource'])
                             }
                         }
                         //handling int balances for correct formatting
-                        if ((parseFloat(response) % 1) === 0) response = response + '.00';
+                        if ((parseFloat(response) % 1) === 0 && response.indexOf('.') === -1) response = response + '.00';
 
                         if (typeof window.analytics !== 'undefined') {
                             analytics.trackEvent('Address', 'Load', wallet.type);

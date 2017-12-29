@@ -48,16 +48,18 @@ angular.module('cryptoapp', ['ionic', 'ngCordova', 'crypto.controllers', 'crypto
                     label: 'dogewallet',
                     address: 'D8EyEfuNsfQ3root9R3ac54mMcLmoNBW6q',
                     type: 'doge'
-                });
-                defaultWallets.push({
+                }, {
                     label: 'bitcoinwallet',
-                    address: '12dUggmXPYsPVHaHr1DoW5J6bb6gvh4yZq',
+                    address: '1JevQLpYsKAt2STFZWmQ8TTAfjSC8RTGdJ',
                     type: 'btc'
-                });
-                defaultWallets.push({
+                }, {
                     label: 'counterparty',
                     address: '1Co1dcFX6u1wQ8cW8mnj1DEgW7xQMEaChD',
                     type: 'xcp'
+                }, {
+                    label: 'ripple',
+                    address: 'rSBybLprUxV6AKTrwhcuGmgrYHVmRfk6f',
+                    type: 'xrp'
                 });
                 $localStorage.storeObject('wallets', defaultWallets);
                 $rootScope.defaultAddresses = true;
